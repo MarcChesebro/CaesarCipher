@@ -2,6 +2,7 @@
 #include "file_utils.h"
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 bool isIn(char ch, char* str){
 
@@ -31,6 +32,10 @@ void removeKey(char* key, char* cipher){
 
 void generateCipher(char* key, char* cipher){
 	char alph[] = "abcdefghijklmnopqrstuvwxyz";
+
+	for(int i = 0; i < strlen(key); i++){
+		key[i] = tolower(key[i]);
+	}
 	removeKey(key, alph);
 	strcpy(cipher, key);
 	strcat(cipher, alph);

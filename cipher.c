@@ -41,6 +41,30 @@ void generateCipher(char* key, char* cipher){
 	strcat(cipher, alph);
 }
 
+void encrypt(char* cipher, char* text){
+	int temp;
+	for(int num = 0; num < strlen(text); num++){
+		temp = (text[num] - 'a'); //should get number of alphabet
+		text[num] = cipher[temp];
+}
+}
+void decrypt(char* cipher, char* text){
+	int temp;
+	char* alphabet = "abcdefghijklmnopqrstuvwxyz";
+	//iterates through the given text
+	for(int count; count < strlen(text); count++){
+		//iterates through the cipher
+		for(int count2; count2 <strlen(cipher); count2){
+			//checks if the letter at the cipher == letter at text
+			if(cipher[count2] == text[count]){
+				//if it does change the letter in text to
+				//corresponding letter of alphabet
+				text[count] = alphabet[count2];
+			}
+		}
+	}
+}
+
 int main(int argc, char** argv){
 	
 	// Check inputs
@@ -54,14 +78,20 @@ int main(int argc, char** argv){
 		return 1;
 	}
 	char cipher[26];
+	char* temp;
+	FILE *fin, *fout;
+	fin = fopen(argv[1], "r");
+	fout = fopen(argv[3], "w");
 
 	// Encryption
 	if(strcmp(argv[4], "e") == 0){
 	generateCipher(argv[2], cipher);
 	printf("final cipher: %s\n", cipher);
-	
+	fprintf(fout, "%s", encrypt(cipher, fin));	
 	// Dycryption
 	}else if(strcmp(argv[4], "d") == 0){
-
+	generateCipher(argv[2], cipher);
+	printf("final cipher: %s\n", cipher);
+	fprintf(fout, "%s", decrypt(cipher, fin));
 	}
 }

@@ -42,24 +42,45 @@ void generateCipher(char* key, char* cipher){
 }
 
 void encrypt(char* cipher, char* text){
-	int temp;
-	for(int num = 0; num < strlen(text); num++){
-		temp = (text[num] - 'a'); //should get number of alphabet
-		text[num] = cipher[temp];
+	int index;
+	//iterate over the text
+	for(int i = 0; i < strlen(text); i++){
+		
+		if(isalpha(text[i])){
+			
+			if(isupper(text[i])){
+
+				index = (text[i] - 'A'); //should get number of alphabet
+
+				text[i] = toupper(cipher[index]);
+			}else{
+				//find the index
+				index = (text[i] - 'a'); //should get number of alphabet
+				//encript data
+				text[i] = cipher[index];
+			}
+		}
+	}
 }
-}
+
 void decrypt(char* cipher, char* text){
 	int temp;
 	char* alphabet = "abcdefghijklmnopqrstuvwxyz";
 	//iterates through the given text
-	for(int count; count < strlen(text); count++){
+	for(int i = 0; i < strlen(text); i++){
 		//iterates through the cipher
-		for(int count2; count2 <strlen(cipher); count2){
+		for(int j = 0; j < strlen(cipher); j++){
 			//checks if the letter at the cipher == letter at text
-			if(cipher[count2] == text[count]){
+			if(cipher[j] == tolower(text[i])){
 				//if it does change the letter in text to
 				//corresponding letter of alphabet
-				text[count] = alphabet[count2];
+				if(isupper(text[i])){
+					
+					text[i] = toupper(alphabet[j]);
+				}else{
+					text[i] = alphabet[j];
+				}
+				break;
 			}
 		}
 	}
@@ -78,20 +99,27 @@ int main(int argc, char** argv){
 		return 1;
 	}
 	char cipher[26];
-	char* temp;
-	FILE *fin, *fout;
-	fin = fopen(argv[1], "r");
-	fout = fopen(argv[3], "w");
+	//char* temp;
+	//FILE *fin, *fout;
+	//fin = fopen(argv[1], "r");
+	//fout = fopen(argv[3], "w");
 
 	// Encryption
 	if(strcmp(argv[4], "e") == 0){
-	generateCipher(argv[2], cipher);
-	printf("final cipher: %s\n", cipher);
-	fprintf(fout, "%s", encrypt(cipher, fin));	
+		generateCipher(argv[2], cipher);
+		printf("final cipher: %s\n", cipher);
+		char* text;
+		int fileSize = read_file(argv[1], &text);
+		encrypt(cipher, text);
+		write_file(argv[3], text, fileSize);
+		//printf("\n%s\n", encrypt(cipher, text));	
 	// Dycryption
 	}else if(strcmp(argv[4], "d") == 0){
-	generateCipher(argv[2], cipher);
-	printf("final cipher: %s\n", cipher);
-	fprintf(fout, "%s", decrypt(cipher, fin));
+		generateCipher(argv[2], cipher);
+		printf("final cipher: %s\n", cipher);
+		char* text;
+		int fileSize = read_file(argv[1], &text);
+		decrypt(cipher, text);
+		write_file(argv[3], text, fileSize);
 	}
 }
